@@ -1,0 +1,32 @@
+{
+  "poll_interval_seconds": 2,
+  "min_edge": 0.01,
+  "cooldown_seconds": 30,
+  "dashboard": {
+    "port": 8080
+  },
+  "telegram": {
+    "bot_token": "${TELEGRAM_BOT_TOKEN}",
+    "chat_id": "${TELEGRAM_CHAT_ID}"
+  },
+  "pairs": [
+    {
+      "name": "What price will Bitcoin hit in February?",
+      "min_edge": 0.01,
+      "opinion": {
+        "base_url": "https://api.opinion.trade",
+        "orderbook_path": "/v1/orderbook",
+        "topic_id": 332,
+        "outcome_id": "REPLACE_WITH_OPINION_OUTCOME_ID",
+        "api_key": "${OPINION_API_KEY}"
+      },
+      "polymarket": {
+        "clob_base_url": "https://clob.polymarket.com",
+        "book_path": "/book",
+        "token_id": "REPLACE_WITH_POLYMARKET_TOKEN_ID",
+        "ws_url": "wss://ws-subscriptions-clob.polymarket.com/ws/market",
+        "use_ws": false
+      }
+    }
+  ]
+}

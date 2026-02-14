@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Opinion vs Polymarket ARB Monitor</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #0f172a; color: #e2e8f0; }
+    .boom { padding: 12px; border-radius: 8px; background: #991b1b; margin-bottom: 16px; display:none; font-weight: bold; }
+    .card { background: #1e293b; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+    table { width: 100%; border-collapse: collapse; }
+    td, th { border-bottom: 1px solid #334155; text-align: left; padding: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Opinion vs Polymarket ARB Monitor</h1>
+  <div id="boom" class="boom">BOOM 💥 Arbitrage Found</div>
+  <div class="card">
+    <h2>Live Books</h2>
+    <pre id="books">loading...</pre>
+  </div>
+  <div class="card">
+    <h2>Signals</h2>
+    <table>
+      <thead><tr><th>Time</th><th>Pair</th><th>Buy</th><th>Sell</th><th>Edge</th></tr></thead>
+      <tbody id="signals"></tbody>
+    </table>
+  </div>
+
+<script>
+async function refresh() {
+  const res = await fetch('/api/state');
+  const state = await res.json();
+  document.getElementById('books').textContent = JSON.stringify(state.snapshots || {}, null, 2);
+  const signals = state.signals || [];
+  const tbody = document.getElementById('signals');
+  tbody.innerHTML = '';
+  for (const s of signals.slice(0, 20)) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${s.ts}</td><td>${s.pair}</td><td>${s.buy_exchange} @ ${Number(s.buy_price).toFixed(4)}</td><td>${s.sell_exchange} @ ${Number(s.sell_price).toFixed(4)}</td><td>${Number(s.edge).toFixed(4)}</td>`;
+    tbody.appendChild(tr);
+  }
+  document.getElementById('boom').style.display = signals.length ? 'block' : 'none';
+}
+setInterval(refresh, 2000);
+refresh();
+</script>
+</body>
+</html>
